@@ -1,0 +1,23 @@
+{
+  "name": "html-remixer",
+  "version": "0.0.0",
+  "description": "A simple gulp-based tool to quickly correct an HTML file.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gyomb/html-remixer.git"
+  },
+  "author": "Gyomb",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Gyomb/html-remixer/issues"
+  },
+  "homepage": "https://github.com/Gyomb/html-remixer#readme",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-file": "^0.4.0",
+    "gulp-rename": "^1.2.2"
+  }
+}
