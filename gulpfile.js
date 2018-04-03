@@ -24,7 +24,7 @@ gulp.task('default', function() {
     let output_folder = settings.output ? settings.output : output_folder_default
     let replacement_rules = settings.rules ? settings.rules : replacement_rules_default
     for (let i = 0; i < replacement_rules.length; i++) {
-      replacement_rules[i][0] = RegExp(replacement_rules[i][0])
+      replacement_rules[i][0] = RegExp(replacement_rules[i][0], 'g')
     }
     gulp.src('content/'+input_folder+'/**.*')
       .pipe(batchReplace(replacement_rules))

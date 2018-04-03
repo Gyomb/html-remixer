@@ -3,6 +3,7 @@
   "output_folder":"remix",
   "rules":[
     ["http://localhost/", "http://mywebsite.com"],
-    ["É", "&Eacute;"]
+    ["É", "&Eacute;"],
+    ["é", "&eacute;"]
   ]
 }
