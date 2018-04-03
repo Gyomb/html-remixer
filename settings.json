@@ -1,0 +1,8 @@
+{
+  "input_folder":"input",
+  "output_folder":"remix",
+  "rules":[
+    ["http://localhost/", "http://mywebsite.com"],
+    ["É", "&Eacute;"]
+  ]
+}
