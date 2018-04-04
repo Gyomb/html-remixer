@@ -3,7 +3,20 @@
   "output_folder":"remix",
   "rules":[
     ["http://localhost/", "http://mywebsite.com"],
+    ["é", "&eacute;"],
     ["É", "&Eacute;"],
-    ["é", "&eacute;"]
+    ["è", "&egrave;"],
+    ["È", "&Egrave;"],
+    ["à", "&agrave;"],
+    ["À", "&Agrave;"],
+    ["â", "&acirc;"],
+    ["Â", "&Acirc;"],
+    ["ô", "&Ocirc;"],
+    ["Ô", "&Ocirc;"],
+    ["ê", "&ecirc;"],
+    ["Ê", "&Ecirc;"],
+    ["ç", "&ccedil;"],
+    ["Ç", "&Ccedil;"],
+    ["’", "'"]
   ]
 }
