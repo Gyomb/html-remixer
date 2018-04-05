@@ -16,6 +16,8 @@
           ["example","src=\"http://google.com/"]
         ]
       }
-    }
+    },
+    ["É", "&Eacute;"],
+    ["é", "&eacute;"]
   ]
 }

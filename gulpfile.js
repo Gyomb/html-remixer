@@ -29,7 +29,22 @@ gulp.task('default', function() {
       basic_replacement_rules[i][0] = RegExp(basic_replacement_rules[i][0], 'g')
     }
     function smart_replace(filename, content) {
+      // Retrieve the subitem of a Replacement Descriptor (aka an item of the "smart_rules" property)
+      function getRepDescrSubitem(rep_descriptor, subitem_type) {
+        let subitem = undefined
+        if(Array.isArray(rep_descriptor)){
+          switch(subitem_type){
+            case "match": subitem = 0; break;
+            case "replace": subitem = 1; break;
+          }
+        } else if(typeof(rep_descriptor)=='object') {
+          subitem = rep_descriptor[subitem_type]
+        }
+        return subitem
+      }
+      // Convert (if need be) the replace subitem into  astring appropriate to the current file
       function defineReplacement(rep_obj) {
+        if (typeof(rep_obj)=='String') return rep_obj
         if(rep_obj.byfilename){
           for(file_rep of rep_obj.byfilename){
             if( filename.match(RegExp(file_rep[0])) ) return file_rep[1]
@@ -39,9 +54,10 @@ gulp.task('default', function() {
         // If default isn't set, "undefined" will be returned
         return rep_obj.default
       }
+      // loop through the list of replacement descriptors
       for (let i = 0; i < smart_replacement_rules.length; i++) {
-        let match = RegExp(smart_replacement_rules[i].match, 'g')
-        let replacement = typeof(smart_replacement_rules[i].replace) == 'String' ? smart_replacement_rules[i].replace : defineReplacement(smart_replacement_rules[i].replace)
+        let match = RegExp(getRepDescrSubitem(smart_replacement_rules[i], 'match'), 'g')
+        let replacement = defineReplacement(getRepDescrSubitem(smart_replacement_rules[i], 'replace'))
         if(replacement){
           content = content.replace(match, replacement)
         }
