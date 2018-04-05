@@ -35,6 +35,8 @@ gulp.task('default', function() {
             if( filename.match(RegExp(file_rep[0])) ) return file_rep[1]
           }
         }
+        // If byfilename isn't found or the current file didn't match any of the items of byfilname, return the default
+        // If default isn't set, "undefined" will be returned
         return rep_obj.default
       }
       for (let i = 0; i < smart_replacement_rules.length; i++) {
@@ -43,6 +45,7 @@ gulp.task('default', function() {
         if(replacement){
           content = content.replace(match, replacement)
         }
+        // If replace is an object and replace.default = false and the current file do not match replace.byfilename's items, the content won't be modified
       }
       return content
     }
