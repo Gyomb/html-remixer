@@ -34,29 +34,41 @@ gulp.task('default', function() {
         let subitem = undefined
         if(Array.isArray(rep_descriptor)){
           switch(subitem_type){
-            case "match": subitem = 0; break;
-            case "replace": subitem = 1; break;
+            case "match": subitem = rep_descriptor[0]; break;
+            case "replace": subitem = rep_descriptor[1]; break;
           }
         } else if(typeof(rep_descriptor)=='object') {
           subitem = rep_descriptor[subitem_type]
         }
         return subitem
       }
-      // Convert (if need be) the replace subitem into  astring appropriate to the current file
-      function defineReplacement(rep_obj) {
-        if (typeof(rep_obj)=='String') return rep_obj
-        if(rep_obj.byfilename){
-          for(file_rep of rep_obj.byfilename){
+      // check if the obj defining either a search or a replacement is a simple string or is an object containing a "byfilename" list of string to search/replace
+      function checkByfilename(obj) {
+        if (typeof(obj)=='string') return obj
+        if(obj.byfilename){
+          for(file_rep of obj.byfilename){
             if( filename.match(RegExp(file_rep[0])) ) return file_rep[1]
           }
         }
         // If byfilename isn't found or the current file didn't match any of the items of byfilname, return the default
         // If default isn't set, "undefined" will be returned
-        return rep_obj.default
+        return obj.default
+      }
+      // Convert (if need be) the search subitem into a string appropriate to the current file
+      function defineSearch(search_obj) {
+        let match = checkByfilename(search_obj)
+        let isRegex = search_obj.noReg == true ? false : true;
+        let flags = typeof(search_obj.flags) == 'string' ? search_obj.flags : 'g'
+        return isRegex == true ? RegExp(match, flags) : match
+      }
+      // Convert (if need be) the replace subitem into a string appropriate to the current file
+      function defineReplacement(rep_obj) {
+        let replacement = checkByfilename(rep_obj)
+        return replacement
       }
       // loop through the list of replacement descriptors
       for (let i = 0; i < smart_replacement_rules.length; i++) {
-        let match = RegExp(getRepDescrSubitem(smart_replacement_rules[i], 'match'), 'g')
+        let match = defineSearch(getRepDescrSubitem(smart_replacement_rules[i], 'match'))
         let replacement = defineReplacement(getRepDescrSubitem(smart_replacement_rules[i], 'replace'))
         if(replacement){
           content = content.replace(match, replacement)

@@ -18,6 +18,9 @@
       }
     },
     ["É", "&Eacute;"],
-    ["é", "&eacute;"]
+    ["é", "&eacute;"],
+    [{"default":"paul", "flags":"i"},"Marcel"],
+    [{"default":"(j|J)o.n", "noReg":true},"Daryl Noreg"],
+    [{"default":"(j|J)o.n"},"Daryl"]
   ]
 }
