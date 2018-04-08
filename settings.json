@@ -1,12 +1,7 @@
 {
   "input_folder":"input",
   "output_folder":"remix",
-  "basic_rules":[
-    ["http://localhost/", "http://mywebsite.com"],
-    ["É", "&Eacute;"],
-    ["é", "&eacute;"]
-  ],
-  "smart_rules":[
+  "replacement_rules":[
     {
       "match": "src=\"",
       "replace":{

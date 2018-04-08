@@ -10,7 +10,7 @@ const through = require('through2');
 
 const input_folder_default = 'input'
 const output_folder_default = 'output'
-const basic_replacement_rules_default = [[]]
+const replacement_rules_default = []
 
 // **************** TASKS ****************
 gulp.task('default', function() {
@@ -23,21 +23,23 @@ gulp.task('default', function() {
     settings = JSON.parse(settings)
     let input_folder = settings.input ? settings.input : input_folder_default
     let output_folder = settings.output ? settings.output : output_folder_default
-    let basic_replacement_rules = settings.basic_rules ? settings.basic_rules : basic_replacement_rules_default
-    let smart_replacement_rules = settings.smart_rules ? settings.smart_rules : smart_replacement_rules_default
-    for (let i = 0; i < basic_replacement_rules.length; i++) {
-      basic_replacement_rules[i][0] = RegExp(basic_replacement_rules[i][0], 'g')
-    }
+    let replacement_rules = settings.replacement_rules ? settings.replacement_rules : replacement_rules_default
+
     function smart_replace(filename, content) {
-      // Retrieve the subitem of a Replacement Descriptor (aka an item of the "smart_rules" property)
+      /////////////////////////////////////////
+      //    FUNCTIONS DEFINITION
+      /////////////////////////////////////////
+      // Retrieve the subitem of a Replacement Descriptor (aka an item of the "replacement_rules" property)
       function getRepDescrSubitem(rep_descriptor, subitem_type) {
         let subitem = undefined
         if(Array.isArray(rep_descriptor)){
+          if(rep_descriptor.length == 0) return false // If the array is empty, exit and return a 'false' descriptor
           switch(subitem_type){
             case "match": subitem = rep_descriptor[0]; break;
             case "replace": subitem = rep_descriptor[1]; break;
           }
         } else if(typeof(rep_descriptor)=='object') {
+          if(Object.keys(rep_descriptor).length == 0) return false // If the object is empty, exit and return a 'false' descriptor
           subitem = rep_descriptor[subitem_type]
         }
         return subitem
@@ -66,10 +68,13 @@ gulp.task('default', function() {
         let replacement = checkByfilename(rep_obj)
         return replacement
       }
+      /////////////////////////////////////////
+      //    LOOP THROUGH REPLACEMENT RULES
+      /////////////////////////////////////////
       // loop through the list of replacement descriptors
-      for (let i = 0; i < smart_replacement_rules.length; i++) {
-        let match = defineSearch(getRepDescrSubitem(smart_replacement_rules[i], 'match'))
-        let replacement = defineReplacement(getRepDescrSubitem(smart_replacement_rules[i], 'replace'))
+      for (let i = 0; i < replacement_rules.length; i++) {
+        let match = defineSearch(getRepDescrSubitem(replacement_rules[i], 'match'))
+        let replacement = defineReplacement(getRepDescrSubitem(replacement_rules[i], 'replace'))
         if(replacement){
           content = content.replace(match, replacement)
         }
@@ -78,7 +83,6 @@ gulp.task('default', function() {
       return content
     }
     gulp.src('content/'+input_folder+'/**.*')
-      .pipe(batchReplace(basic_replacement_rules))
       .pipe(through.obj(function(file, enc, cb) {
         file.contents = new Buffer(smart_replace(file.relative, file.contents.toString()))
         cb(null, file)
